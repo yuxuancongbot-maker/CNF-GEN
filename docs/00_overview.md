@@ -305,7 +305,7 @@ every-step 对 posthoc：joint RMSE `0.0559 vs 0.0624`、EE RMSE `0.0334 vs 0.04
 
 ### 5.3 6-DOF latent-level：every-step 成立，hard vs soft 是 trade-off
 
-设置：小型 3D U-Net action WM，128×128、17 帧、12.88M 参数；128 条训练视频、16 条 held-out；直接在 motion latent `c`（7×10=70 维）上投影。
+设置：小型 3D U-Net action WM，128×128、17 帧、12.88M 参数；128 条训练视频、16 条 held-out；直接在 motion latent `c`（7×10=70 维）上投影。下表采用 release 复跑口径；原始报告值在表后补充列出。
 
 | 方法 | PSNR | anchor error | joint RMSE | EE RMSE | 速度误差 | jerk |
 |---|---:|---:|---:|---:|---:|---:|

@@ -1,0 +1,36 @@
+# Data, checkpoints, and generated media
+datasets/
+outputs/
+runs/
+weights/
+checkpoints/
+*.pt
+*.pth
+*.safetensors
+*.mp4
+*.gif
+*.png
+*.jpg
+!docs/assets/*.png
+!docs/assets/*.jpg
+
+# External repositories and large assets
+PhysisForcing/
+VideoX-Fun/
+papers/
+presentations/
+models/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+build/
+dist/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

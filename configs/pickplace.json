@@ -1,0 +1,47 @@
+{
+  "dataset": {
+    "frames": 17,
+    "joints": 7,
+    "size": 256,
+    "fps": 8,
+    "train_count": 128,
+    "train_seed": 0,
+    "eval_count": 16,
+    "eval_seed": 1
+  },
+  "motion_prior": {
+    "degree": 10,
+    "hidden": 256,
+    "steps": 6000,
+    "batch": 64,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "seed": 0,
+    "init_scale": 0.5
+  },
+  "soft_prior": {
+    "soft_weight": 20.0,
+    "steps": 6000,
+    "batch": 64,
+    "lr": 0.001,
+    "seed": 1
+  },
+  "video_wm": {
+    "hidden": 32,
+    "size": 128,
+    "steps": 4000,
+    "batch": 2,
+    "lr": 0.0002,
+    "seed": 0,
+    "l1_weight": 0.1,
+    "foreground_weight": 11.0
+  },
+  "constraints": {
+    "dense_anchors": [0, 3, 4, 6, 10, 13, 16],
+    "sparse_anchors": [0, 4, 8, 12, 13, 16],
+    "velocity_frame": 8,
+    "sampling_steps": 50,
+    "projection_eps": 1e-08,
+    "sparse_jacobian_iterations": 3
+  }
+}

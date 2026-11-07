@@ -4,7 +4,7 @@
 
 ## 0. 一句话
 
-在测试时，把一个 **CNF（Constrained Neural Fields）运动场**约束到稀疏 waypoint / 速度上，得到满足硬约束的关节轨迹 `q*(t)`；再通过 **input-level control video** 或 **latent-level motion latent** 两条接口驱动视频世界模型，不重训主体。
+在测试时，把一个 **CNF（Constrained Neural Fields）运动场**约束到稀疏 waypoint / 速度上，得到满足硬约束的关节轨迹 `q*(t)`；再通过 **input-level control video** 或 **latent-level motion latent** 两条接口驱动视频世界模型，不重训主体（input-level 最多训练轻量 Control LoRA）。
 
 CNF 不是 Continuous Normalizing Flow。本项目的 latent-level 也不是视频模型的内部 latent，而是 **70 维 Legendre 系数 `c`**（7 关节 × 10 阶）。
 

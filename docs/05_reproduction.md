@@ -259,6 +259,16 @@ PYTHONPATH=src python scripts/summarize_metrics.py \
 --derivative-mode finite_difference
 ```
 
+例如 continuous 模式的 sparse 复跑：
+
+```bash
+PYTHONPATH=src python scripts/generate_controls.py \
+  --eval runs/pickplace256_eval --motion-prior runs/motion_model.pt \
+  --output runs/controls_sparse_continuous --mode sparse \
+  --methods sparse_waypoint,sparse_velocity --samples 16 \
+  --derivative-mode continuous
+```
+
 在第 8 帧，`discrete_autograd` 与 `continuous` 一致到 `5e-7`，所以
 速度约束结论不依赖归一化项的微分方式；`finite_difference` 有离散误差。
 

@@ -222,7 +222,7 @@ c_{\text{norm}}=\frac{c_{\text{phys}}-\mu}{\sigma}.
 
 `discrete_autograd` 与 `continuous` 的差来自采样范数对 \(t\) 的耦合项，该项含有 \(P_d(0.5)P'_d(0.5)\)，在中点必为零。因此 **在第 8 帧，`discrete_autograd` 和 `continuous` 是同一个算子（差 \(4.77\times10^{-7}\)，float32 舍入级别）；`finite_difference` 仍有 \(0.6487\) 的离散差分误差**。
 
-这不是只靠推导：release 里附带了 continuous 模式的稀疏复跑 `release/runs/controls_sparse_continuous/metrics.json`。把它和 `release/runs/controls_sparse/metrics.json` 逐样本比较，以下指标的最大绝对差为：
+这不是只靠推导：本地用 `--derivative-mode continuous` 复跑了 sparse 分支（`runs/controls_sparse_continuous/metrics.json`，`runs/` 未提交；命令见 `05_reproduction.md`）。把它和默认的 `runs/controls_sparse/metrics.json` 逐样本比较，以下指标的最大绝对差为：
 
 | 指标 | 最大绝对差 |
 |---|---:|

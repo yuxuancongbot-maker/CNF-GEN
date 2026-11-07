@@ -2,7 +2,7 @@
 
 **视频世界模型的测试时硬运动约束**
 
-一句话：在测试时用一个 CNF 运动场，把稀疏 waypoint / 速度变成满足硬约束的关节轨迹 `q*(t)`，再通过 **input-level control video** 或 **latent-level motion latent** 两条接口交给视频世界模型；不重训视频模型主体。
+一句话：在测试时用一个 CNF 运动场，把稀疏 waypoint / 速度变成满足硬约束的关节轨迹 `q*(t)`，再通过 **input-level control video** 或 **latent-level motion latent** 两条接口交给视频世界模型；不重训视频模型主体（input-level 只训练轻量 Control LoRA）。
 
 > **术语澄清**
 >

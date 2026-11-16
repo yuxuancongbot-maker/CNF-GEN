@@ -4,7 +4,6 @@
 
 这是多任务研究 monorepo；当前仅有协作骨架、包占位和可执行仓库检查，算法尚未迁入。先运行 `git status --short` 和 `rg --files`，阅读认领模块的 README、TASKS 与 `docs/contracts.md`。
 
-- 用户要求普通实验由 OpenCode 执行，Codex 负责规划、协调与审阅；不得用 Codex subagent 静默代替 OpenCode。任务说明、执行会话、日志与完成证据按 [AGENT.md](AGENT.md#代理分工codex-规划opencode-执行实验) 保存。
 - 共享代码放 `src/gcnf/`；任务实现放 `tasks/<task>/src/gcnf_<task>/`。新模块遵循任务模板。
 - 任务可导入 `gcnf`；core 禁止导入 `gcnf_<task>`；任务禁止直接互相导入，数据交换走版本化产物契约。
 - 不在任务内部复制投影器。需要新的通用算子或求解器时，单独提出 core Issue/PR。

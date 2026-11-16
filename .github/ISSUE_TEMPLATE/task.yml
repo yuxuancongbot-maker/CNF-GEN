@@ -1,0 +1,44 @@
+name: Development task
+description: Claim a scoped method, application, baseline, or evaluation task.
+body:
+  - type: input
+    id: work_item
+    attributes:
+      label: Work item ID
+      description: Existing local ID such as SHP-001, or a new agreed ID.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - core
+        - shape
+        - action
+        - video
+        - deformation
+        - fluid
+        - pde
+        - infra
+    validations:
+      required: true
+  - type: textarea
+    id: deliverable
+    attributes:
+      label: Problem and deliverable
+      description: State output, owned paths, and the interface this task consumes.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Link blocking Issues, data, model revisions, or write none.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Include exact verification, metrics, artifacts, and failure criteria.
+    validations:
+      required: true

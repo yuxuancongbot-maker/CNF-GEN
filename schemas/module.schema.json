@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generative CNF module metadata v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "priority",
+    "state",
+    "owner",
+    "package",
+    "package_dir",
+    "dependencies",
+    "upstream_artifacts",
+    "work_items"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "priority": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ]
+    },
+    "state": {
+      "enum": [
+        "scaffold",
+        "in_development",
+        "experimental",
+        "validated"
+      ]
+    },
+    "owner": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "package": {
+      "type": "string",
+      "pattern": "^gcnf(?:_[a-z0-9_]+)?$"
+    },
+    "package_dir": {
+      "type": "string",
+      "pattern": "^src/gcnf(?:_[a-z0-9_]+)?$"
+    },
+    "dependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "upstream_artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "work_items": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]+-[0-9]{3}$"
+      }
+    }
+  }
+}

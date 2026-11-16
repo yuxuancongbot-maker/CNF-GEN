@@ -1,0 +1,12 @@
+# Template only: all entries are comments until real accounts are assigned.
+# Owners must have repository write permission. Later matching entries override earlier ones.
+# /src/gcnf/ @ORG/core
+# /schemas/ @ORG/core @ORG/evaluation
+# /tasks/shape_completion/ @ORG/shape
+# /tasks/action_generation/ @ORG/action
+# /tasks/video_generation/ @ORG/video
+# /tasks/deformation/ @ORG/geometry
+# /tasks/fluid_generation/ @ORG/physics
+# /tasks/pde_generation/ @ORG/physics
+# /scripts/ @ORG/infrastructure
+# /.github/ @ORG/maintainers

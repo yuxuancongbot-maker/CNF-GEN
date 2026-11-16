@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "run_id": "example-not-executed",
+  "task": "shape_completion",
+  "method": "unconfigured",
+  "status": "incomplete",
+  "git_revision": null,
+  "dirty": true,
+  "config_path": "tasks/shape_completion/configs/full.example.json",
+  "config_sha256": null,
+  "dataset": {
+    "id": null,
+    "revision": null,
+    "split": null
+  },
+  "seeds": {
+    "training": null,
+    "sampling": null
+  },
+  "attempts": 0,
+  "failures": [
+    "Contract example only; no experiment has been executed."
+  ],
+  "metrics": [],
+  "artifacts": []
+}

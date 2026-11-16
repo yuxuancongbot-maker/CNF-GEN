@@ -1,0 +1,20 @@
+{
+  "id": "video_generation",
+  "title": "视频与 world model",
+  "priority": "P1",
+  "state": "scaffold",
+  "owner": null,
+  "package": "gcnf_video_generation",
+  "package_dir": "src/gcnf_video_generation",
+  "dependencies": [
+    "core"
+  ],
+  "upstream_artifacts": [
+    "action_generation"
+  ],
+  "work_items": [
+    "VID-001",
+    "VID-002",
+    "VID-003"
+  ]
+}

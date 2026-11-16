@@ -1,0 +1,18 @@
+{
+  "id": "deformation",
+  "title": "形变场生成",
+  "priority": "P2",
+  "state": "scaffold",
+  "owner": null,
+  "package": "gcnf_deformation",
+  "package_dir": "src/gcnf_deformation",
+  "dependencies": [
+    "core"
+  ],
+  "upstream_artifacts": [],
+  "work_items": [
+    "DEF-001",
+    "DEF-002",
+    "DEF-003"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "status": "template-not-executed",
+  "task": "video_generation",
+  "pipeline": "full",
+  "training_seeds": [
+    0,
+    1,
+    2
+  ],
+  "samples_per_condition": 16,
+  "data_root_env": "GCNF_DATA_ROOT",
+  "checkpoint_root_env": "GCNF_CHECKPOINT_ROOT",
+  "run_root_env": "GCNF_RUN_ROOT",
+  "dataset": {
+    "id": null,
+    "revision": null,
+    "split": null
+  },
+  "prior": {
+    "id": null,
+    "revision": null
+  },
+  "constraint_layout": null,
+  "methods": [
+    "unconstrained",
+    "soft_guidance",
+    "posthoc",
+    "stepwise"
+  ],
+  "note": "Template only. Task owner must implement the pipeline and select a full protocol."
+}

@@ -3,27 +3,22 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cnf-motion"
+name = "generative-cnf"
 version = "0.1.0"
-description = "Hard-constrained motion fields for video world models"
+description = "Shared interfaces for hard-constrained generative neural fields"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "numpy>=1.24",
-    "torch>=2.1",
-    "pybullet>=3.2",
-    "opencv-python>=4.8",
-    "imageio>=2.31",
-    "imageio-ffmpeg>=0.4",
-]
+dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7.4"]
+dev = ["ruff>=0.14,<1", "jsonschema>=4.23,<5", "build>=1.2,<2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.pytest.ini_options]
-pythonpath = ["src"]
-testpaths = ["tests"]
-addopts = "-q"
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

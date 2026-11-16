@@ -1,0 +1,18 @@
+{
+  "id": "action_generation",
+  "title": "动作生成",
+  "priority": "P0",
+  "state": "scaffold",
+  "owner": null,
+  "package": "gcnf_action_generation",
+  "package_dir": "src/gcnf_action_generation",
+  "dependencies": [
+    "core"
+  ],
+  "upstream_artifacts": [],
+  "work_items": [
+    "ACT-001",
+    "ACT-002",
+    "ACT-003"
+  ]
+}

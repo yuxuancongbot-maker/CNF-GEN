@@ -1,0 +1,18 @@
+{
+  "id": "fluid_generation",
+  "title": "流体场生成",
+  "priority": "P2",
+  "state": "scaffold",
+  "owner": null,
+  "package": "gcnf_fluid_generation",
+  "package_dir": "src/gcnf_fluid_generation",
+  "dependencies": [
+    "core"
+  ],
+  "upstream_artifacts": [],
+  "work_items": [
+    "FLD-001",
+    "FLD-002",
+    "FLD-003"
+  ]
+}

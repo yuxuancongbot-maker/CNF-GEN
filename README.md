@@ -1,98 +1,76 @@
-# CNF Motion
+# Generative CNF
 
-**视频世界模型的测试时硬运动约束**
+为生成神经场提供测试时点值与微分硬约束；在满足要求的同时，评估生成质量和可行多样性。
 
-一句话：在测试时用一个 CNF 运动场，把稀疏 waypoint / 速度变成满足硬约束的关节轨迹 `q*(t)`，再通过 **input-level control video** 或 **latent-level motion latent** 两条接口交给视频世界模型；不重训视频模型主体（input-level 只训练轻量 Control LoRA）。
+**当前状态：协作仓库骨架。算法尚未迁入，未执行新的模型实验，当前仅为协作骨架。** 各任务的状态与待办以其 `module.json`、`TASKS.md` 为准。
 
-> **术语澄清**
->
-> - **CNF = Constrained Neural Fields**（NeurIPS 2023，任意阶微分硬约束），**不是** Continuous Normalizing Flow。
-> - 本仓库的 **latent-level** 指 **70 维 Legendre 系数向量 `c`**（7 关节 × 10 阶），约束直接作用在 `c` 上，再经 `q(t)=B(t)c` 变成轨迹；**不是** Wan / 3D U-Net 内部的 video latent。
+## 仓库分工
 
-## 方法（5 条）
-
-1. **轨迹表示**：`q(t) = B(t)c`。17 帧、7 关节、10 阶归一化 Legendre 基，`c ∈ R^70`；速度用 `B'(t)c`。
-2. **运动先验**：`p(c | q0)` 用 flow matching 训练（MLP，6000 步）；推理 50 步 Euler 采样，初始噪声尺度 0.5。
-3. **精确投影**：把位置/速度约束堆成 `A c = b`，做最小范数硬投影 `c ← c − Aᵀ(AAᵀ + εI)⁻¹(Ac − b)`，`ε = 1e-8`；位置/速度残差到求解精度，不依赖 loss 权重。
-4. **every-step**：在每个采样步都投影，而不是只在最后投影一次（posthoc）；最终投影始终保留，便于对照。
-5. **视频接口**：input-level 把 `q*(t)` 转成 skeleton / segmentation control video，交给 Wan2.1-Fun-1.3B-Control（主体冻结 + Control LoRA）；latent-level 直接把约束加在 70 维运动系数 `c` 上，再送小型 action-conditioned video WM。
-
-## 已验证什么（带精确数字）
-
-- **6-DOF 位置硬约束**：16 条 held-out 轨迹上，dense/sparse 的**纯投影** anchor 误差 `< 1e-6`；桌面穿透 0，方块最终位置误差约 0。6-DOF latent-level 评测（含安全 IK 后处理）的端到端 anchor error 约 `0.00131 rad`（见 hard vs soft 一条）。
-- **every-step vs posthoc（6-DOF latent-level）**：小型 3D U-Net action WM（128×128、17 帧、16 held-out）上，PSNR `23.99 vs 23.58`，配对 `+0.40 ± 0.20 dB`（10/16 更好）；jerk `0.1638 vs 0.2061`，**15/16** 更好。原始报告为 `23.94 vs 23.53`（`+0.41 dB`，11/16），差异 `<0.2 dB`。
-- **hard vs soft**：anchor error `0.00131 vs 0.1320 rad`（约 100 倍），hard 的 PSNR `23.99 vs 23.48`、jerk 16/16 更好；但 **soft 的关节 RMSE 更低**（`0.0411 vs 0.0587`）。原始报告为 soft anchor `0.1315 rad`、joint `0.0410`；这是“精确约束 vs 关节平滑”的 trade-off，不是全面碾压。
-- **稀疏 waypoint + 任务空间速度（6-DOF 轨迹级）**：相对 sparse waypoint，关节 RMSE `0.0559 vs 0.0618`（**16/16**）、末端 RMSE `0.0334 vs 0.0376`（**14/16**）、末端速度误差 `0.116 vs 0.533`（**16/16**）；代价是 jerk 略高（`0.1597 vs 0.1442`，1/16 更好）。
-- **1.3B input-level Control LoRA（双摆）**：同一 GT control 下，waypoint EPE（control 跟随）`8.87 → 6.56 px`，PSNR `31.06 → 34.98 dB`（4 held-out）。6-DOF 上 base→LoRA 为 control EPE `24.85 → 6.65 px`、PSNR `22.99 → 24.32 dB`（8 held-out）。
-- **PF_Wan 1.3B 100-step 视频负结果**：PhysisForcing + Wan2.1-T2V-1.3B 在 1 个 held-out clip 上把 low-level objective 从 soft 的 `0.01104` 降到 `0.00259`，但生成视频没有复现参考运动：动态轨迹 EPE `66.27 vs 73.29 px`，运动位移 `3.44 vs 2.32 px`（参考 `80.89 px`）。单 clip、单 seed，且 T2V backbone 不是真正的 I2V，不能据此否定 CNF 投影。
-
-## 结果总表
-
-| 测试台 | 设置 | n | 关键指标 | 结果 | 结论 |
-|---|---|---:|---|---|---|
-| 6-DOF 轨迹（dense） | 7 anchors + 第 8 帧关节速度；flow prior + 投影 | 16 | anchor / joint RMSE / jerk | anchor `<1e-6`；waypoint `0.0509 / 0.1559`，velocity `0.0668 / 0.1988`，posthoc `0.0632 / 0.1861` | 硬约束成立；dense velocity 反而更差 |
-| 6-DOF 轨迹（sparse） | 6 anchors + 第 8 帧末端 3D 速度 | 16 | joint / EE / velocity / jerk | velocity vs waypoint：`0.0559 vs 0.0618`（16/16）、`0.0334 vs 0.0376`（14/16）、`0.116 vs 0.533`（16/16）、jerk `0.1597 vs 0.1442`（1/16） | 轨迹级正；jerk 略差 |
-| 6-DOF latent-level | 12.88M 3D U-Net，128²，17 帧 | 16 | PSNR / anchor / jerk | every-step vs posthoc `23.99 vs 23.58 dB`（+0.40，10/16；原报告 `23.94 vs 23.53`，+0.41，11/16）、jerk `0.1638 vs 0.2061`（15/16）；hard vs soft anchor `0.00131 vs 0.1320`，soft joint RMSE `0.0411 vs 0.0587`（原报告 soft joint `0.0410`） | every-step 成立；hard/soft trade-off |
-| 2-link latent-level（历史） | 64²，16 帧，12 维系数，3D U-Net | 128 视频 / 1024 轨迹 | pixel EPE / jerk / PSNR | every-step vs posthoc：`0.586 vs 0.689 px`、`2.07 vs 6.05`、`38.94 vs 28.35 dB` | every-step 强正 |
-| 1.3B input-level（双摆） | Wan2.1-Fun-1.3B-Control + LoRA，256² | 4 | waypoint EPE / PSNR | base→LoRA `8.87→6.56 px`、`31.06→34.98 dB`；velocity vs waypoint `6.42 vs 6.65 px`、`34.31 vs 34.16 dB`（4/4） | LoRA 有效；velocity 小幅正 |
-| 1.3B noisy（双摆） | 4 px waypoint 噪声；oracle vs estimated velocity | 8 | track EPE / PSNR / joint RMSE | oracle `5.26 / 32.96 / 0.091` vs waypoint `6.45 / 32.55 / 0.105`；estimated `6.82 / 32.11 / 0.147` | oracle 正；estimated 负 |
-| PF_Wan 1.3B 100-step | PhysisForcing + Wan2.1-T2V-1.3B | 1 clip | low-level obj / video EPE | low-level `0.00259 vs 0.01104`；dynamic EPE `66.27 vs 73.29 px`；位移 `3.44 vs 2.32 px`（参考 `80.89`） | 视频负结果 |
-
-表中 latent-level 同时标注原始报告与 release 复跑值；dense/sparse 与 1.3B 为原始报告值。完整复跑与逐项对照见 [`docs/08_reproduction_numbers.md`](docs/08_reproduction_numbers.md)。
-
-## 仓库结构
-
-| 路径 | 内容 |
-|---|---|
-| `src/cnf_motion/` | 核心实现：Legendre 基、flow prior、精确投影、稀疏约束、PyBullet 场景、video WM、指标 |
-| `scripts/` | 数据生成、运动先验 / soft baseline / video WM 训练、control 生成、评测、端到端复现 |
-| `tests/` | 单元测试：投影精确性、basis、metrics、video WM、scene smoke |
-| `docs/` | 总览、方法、6-DOF/latent/1.3B 实验、复现、指标、限制、复现快照 |
-| `configs/` | 报告实验的 documentation-only 配置参考（`pickplace.json`） |
-
-`runs/`、`datasets/`、`outputs/`、checkpoints 和视频均由脚本生成，已在 `.gitignore` 中排除。
-
-## 快速开始
-
-在 `release/` 目录下：
-
-```bash
-python3 -m pip install -e ".[dev]"
-python3 -m pytest
-PYTHON=python3 bash scripts/reproduce_pickplace.sh
+```text
+src/gcnf/                 共享方法：场接口、算子、求解器、采样接入、通用评测
+tasks/
+  shape_completion/      3D 点/法线约束下的多样形状补全
+  action_generation/     waypoint/导数约束下的动作生成
+  video_generation/      受约束中间场驱动的视频/world model
+  deformation/           handle/Jacobian 约束下的形变生成
+  fluid_generation/      无散度结构与测试时观测的组合
+  pde_generation/        初边值约束下的物理场生成
+schemas/                 任务元数据和实验结果格式
+tests/                   共享核心与仓库契约测试
+scripts/                 仓库检查、任务状态等轻量工具
+docs/                    接口、分工、实验规范、历史代码迁移
+assets/                  小型架构图和示意图
+data/                    数据获取说明；实际数据置于忽略目录
+external/                第三方仓库/权重的来源与版本记录
+.github/                 Issue、PR、CODEOWNERS 模板与 CPU CI
 ```
 
-预期产物（均在 `runs/` 下）：
+每个任务拥有独立的 `src/`、`tests/`、`configs/`、`scripts/`、`pyproject.toml`、`README.md`、`TASKS.md`、`module.json`。不把六个任务的模型依赖装进同一个环境。
 
-- `pickplace256/`：128 条训练数据（RGB + control + q）
-- `pickplace256_eval/`：16 条 held-out 数据
-- `motion_model.pt`、`soft_motion_model_w20.pt`、`video_wm.pt`
-- `controls_sparse/`、`controls_dense/`：`metrics.json` + `rgb/`、`control/`、`q/`
-- `eval_action_wm/metrics.json` 和 `eval_action_wm/videos/`
+## 开始工作
 
-端到端脚本只覆盖 6-DOF 合成数据；1.3B / PF_Wan 实验需要外部权重和仓库（见下）。
+先看 [协作任务与认领](docs/workstreams.md)，再看 [接口契约](docs/contracts.md) 和自己任务的 `TASKS.md`。
 
-## 未包含
+面向合作者的六个应用进展、已有证据与验收要求汇总在 [Applications 进展与协作认领](docs/applications_status_collaboration.md)，可直接复制到飞书文档。
 
-- **数据集 / checkpoint / 生成视频**：`datasets/`、`runs/`、`outputs/`、`*.pt`、`*.mp4` 不在仓库中；6-DOF 数据可由脚本重新生成。
-- **外部 1.3B 权重与仓库**：Wan2.1-Fun、VideoX-Fun、PhysisForcing / PF_Wan 等不随 release 提供；1.3B 双摆、1.3B 6-DOF 和 PF_Wan 实验需要外部代码与权重，不能只靠本 release 复现。
-- **真实机器人数据**：没有 BridgeData / DROID、真实接触力或摩擦；全部是 PyBullet 合成 pick-and-place。
-- **外部 baseline**：ProjFlow、PDM、Wan-Move、IOI 等没有代码 / 权重 / license，未做定量对比。
+仓库元数据检查仅需 Python 3.10+：
 
-## 文档
+```bash
+python3 scripts/check_repository.py
+```
 
-- [docs/00_overview.md](docs/00_overview.md)：总览、实验矩阵、claim 边界。
-- [docs/01_method.md](docs/01_method.md)：Legendre 基、flow matching、硬投影、安全 IK。
-- [docs/02_pickplace.md](docs/02_pickplace.md)：6-DOF 数据、dense/sparse 结果。
-- [docs/03_latent_wm.md](docs/03_latent_wm.md)：12.88M action WM、soft baseline、latent 评测。
-- [docs/04_wan_1_3b.md](docs/04_wan_1_3b.md)：1.3B input-level、含噪速度、PF_Wan。
-- [docs/05_reproduction.md](docs/05_reproduction.md)：安装、命令、种子、产物、排查。
-- [docs/06_metrics.md](docs/06_metrics.md)：指标公式与统计。
-- [docs/07_limitations.md](docs/07_limitations.md)：负结果、限制、falsification criteria。
-- [docs/08_reproduction_numbers.md](docs/08_reproduction_numbers.md)：本 release 的复现数值快照。
-- [docs/README.md](docs/README.md)：文档索引和推荐阅读顺序。
-- [configs/pickplace.json](configs/pickplace.json)：报告实验的配置参考。
-- [scripts/reproduce_pickplace.sh](scripts/reproduce_pickplace.sh)：端到端复现脚本。
-- [src/cnf_motion/](src/cnf_motion/)：核心实现代码。
+开发环境与默认检查：
 
-> 原始报告数字来自开发仓库的 `experiments/`（不随 release 打包）；release 复跑数字来自 [`docs/08_reproduction_numbers.md`](docs/08_reproduction_numbers.md)。
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+python scripts/check_repository.py
+python -m unittest discover -s tests -v
+ruff check .
+ruff format --check .
+python -m build
+```
+
+任务开发使用自己的环境，例如：
+
+```bash
+python3 -m venv .venv-action
+source .venv-action/bin/activate
+python -m pip install -e '.[dev]' -e tasks/action_generation
+```
+
+任务包当前只含包骨架，模型依赖由对应迁移 Issue 添加；上面的安装不会下载 PyTorch、数据或权重。训练/评测入口尚未实现，不能将任务配置模板当成已经可运行的 pipeline。
+
+## 开发规则
+
+开始开发前阅读 [AGENT.md：开发者注意事项](AGENT.md)，其中集中说明模块边界、实验口径、多人共用服务器与交付要求。
+
+- 任务代码可以依赖 `gcnf`；共享核心不依赖任务；任务之间不导入对方内部实现。
+- 动作到视频通过版本化产物格式连接，视频开发者不必运行动作训练器。
+- 先认领一个工作项，再开一个范围明确的 PR；共享接口变更单独提 PR。
+- 每次完整实验同时交付配置、版本、种子、结果、失败与产物索引。
+
+详见 [CONTRIBUTING.md](CONTRIBUTING.md)、[实验规范](docs/experiments.md)、[GitHub 配置](docs/github_setup.md)。
+
+现有工作区的 `release/` 与 `experiments/` 按 [迁移清单](docs/migration.md) 逐项接入。本仓库不复制历史会话、第三方整个仓库、数据和 checkpoint。发布前由维护者确定代码许可证，各外部资源保留自己的授权要求。

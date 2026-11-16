@@ -1,0 +1,20 @@
+{
+  "id": "core",
+  "title": "Shared CNF core and infrastructure",
+  "priority": "P0",
+  "state": "scaffold",
+  "owner": null,
+  "package": "gcnf",
+  "package_dir": "src/gcnf",
+  "dependencies": [],
+  "upstream_artifacts": [],
+  "work_items": [
+    "CORE-001",
+    "CORE-002",
+    "CORE-003",
+    "CORE-004",
+    "INFRA-001",
+    "INFRA-002",
+    "INFRA-003"
+  ]
+}

@@ -10,6 +10,7 @@ dist/
 .env
 .env.*
 !.env.example
+experiments/learned_basis_hybrid_cnf/configs/paths.json
 datasets/
 checkpoints/
 runs/

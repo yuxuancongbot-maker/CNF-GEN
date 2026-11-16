@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "learned-basis-hybrid-cnf"
+version = "0.1.0"
+description = "Wan 1.3B action-conditioned world-model input-level v2 experiment (learned-basis Hybrid-CNF)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "torch>=2.1",
+    "pybullet>=3.2",
+    "opencv-python>=4.8",
+    "imageio>=2.31",
+    "imageio-ffmpeg>=0.4",
+]
+
+[project.optional-dependencies]
+wan = [
+    "diffusers>=0.30",
+    "omegaconf>=2.3",
+    "transformers>=4.40",
+    "accelerate>=0.30",
+    "safetensors>=0.4",
+    "Pillow>=10.0",
+]
+dev = ["pytest>=7.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

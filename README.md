@@ -2,7 +2,7 @@
 
 为生成神经场提供测试时点值与微分硬约束；在满足要求的同时，评估生成质量和可行多样性。
 
-**当前状态：协作仓库骨架。算法尚未迁入，未执行新的模型实验，当前仅为协作骨架。** 各任务的状态与待办以其 `module.json`、`TASKS.md` 为准。
+**当前状态：共享 core/任务通用接口仍为协作骨架；Wan 1.3B input-level v2 实验已作为独立实验模块迁入（见下文「已迁入的 faithful 实验代码」）。** 迁移后已验证训练、动作采样和单条视频链路，尚未重新运行完整 256 视频实验。各任务的状态与待办以其 `module.json`、`TASKS.md` 为准。
 
 ## 仓库分工
 
@@ -61,6 +61,22 @@ python -m pip install -e '.[dev]' -e tasks/action_generation
 ```
 
 任务包当前只含包骨架，模型依赖由对应迁移 Issue 添加；上面的安装不会下载 PyTorch、数据或权重。训练/评测入口尚未实现，不能将任务配置模板当成已经可运行的 pipeline。
+
+## 已迁入的 faithful 实验代码
+
+Wan 1.3B action-conditioned world-model **input-level v2** 实验（learned-basis Hybrid-CNF，
+16-scene，2026-11-14）已作为独立实验模块迁入，仅把硬编码绝对路径收敛到配置，数值代码逐字保留：
+
+```text
+src/cnf_motion/                          共享运动代码（随根包 pip install -e '.[motion]' 安装）
+experiments/learned_basis_hybrid_cnf/    v2 实验包 + 入口 + 数据准备/评测器/PSNR 脚本
+```
+
+这不是六个任务通用 `gcnf_*` adapter 的实现（那些仍为 scaffold），而是可独立安装、按
+`CNF_V2_*` 环境变量/JSON 配置复现的实验包。安装、配置、命令、缺失资源与验证范围见
+[experiments/learned_basis_hybrid_cnf/README.md](experiments/learned_basis_hybrid_cnf/README.md)、
+[reproduction.md](experiments/learned_basis_hybrid_cnf/docs/reproduction.md) 与
+[迁移清单](docs/migration.md)。
 
 ## 开发规则
 

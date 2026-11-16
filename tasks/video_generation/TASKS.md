@@ -13,3 +13,7 @@
 优先级依次为：① 可行性与任务定义；② 同 prior/noise/条件信息的投影对照；③ 分层指标与独立跟踪/pose；④ scene/Wan seed 扩展与配对统计。现有 8 scene、单 Wan seed43、未独立校准 HSV 代理不是扩展矩阵完成证据。既有 `configs/full.example.json` 仍为通用未执行模板，不能直接当作本次 protocol。
 
 首次认领时在 GitHub Issue 指定负责人和本模块路径。需要 core 改动先提共享接口 PR；完整实验一次运行并一起报告指标、产物、成本与失败。
+
+## 迁移进展（2026-11-16）
+
+- VID-002 的 faithful 代码已迁入 `experiments/learned_basis_hybrid_cnf/` 与 `src/cnf_motion/`（含数据准备、固定/学习基训练、软/Hybrid 采样、约束与安全修复、control 渲染、Wan 1.3B + LoRA、评测与 PSNR 全链路），入口 `scripts/run_learned_basis_hybrid_cnf.py` 已通过 CPU 数值测试与 import 检查。这是“代码迁移”，不等于 VID-002 的信息匹配协议已完成；通用 adapter 与 core 契约拆分仍未做。

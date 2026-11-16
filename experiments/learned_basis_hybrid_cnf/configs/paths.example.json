@@ -1,0 +1,14 @@
+{
+  "OUT": "outputs/learned_basis_hybrid_cnf_v2",
+  "TRAIN_DS": "/path/to/pickplace256",
+  "EVAL_DS": "/path/to/pickplace256_eval",
+  "V2_COND": "/path/to/video_task_validation_20261114/conditions",
+  "OLD_V2_COND": "/path/to/input_feasible_conditions_v2_20261113",
+  "WAN_MODEL": "/path/to/Wan2.1-Fun-V1.1-1.3B-Control",
+  "WAN_LORA": "/path/to/checkpoint-1500-compatible_with_comfyui.safetensors",
+  "VIDEOX": "/path/to/VideoX-Fun",
+  "EVALUATOR_PT": "/path/to/video_task_validation_20261114/evaluator/evaluator_final_step2000.pt",
+  "EVALUATOR_SPEC": "/path/to/video_task_validation_20261114/evaluator/evaluator_spec.json",
+  "EVALUATOR_CAL": "/path/to/video_task_validation_20261114/evaluator/calibration_pass.json",
+  "BASE_1_3B": "/path/to/input_baselines_1_3b_1k"
+}

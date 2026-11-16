@@ -29,6 +29,23 @@ module.json              状态/依赖/归属元数据
 
 目录中的 `tests/` 与 `scripts/` 以实际目录名为准；代码尚待认领实施。
 
+## 已迁入的 faithful 实验代码（VID-002 部分）
+
+2026-11-16 已把真实运行过的 Wan 1.3B input-level v2 实验（learned-basis Hybrid-CNF，
+16-scene，2026-11-14）作为**独立实验模块**迁入本仓库：
+
+```text
+experiments/learned_basis_hybrid_cnf/    v2 实验包 + 入口 + 数据准备/评测器/PSNR 脚本
+src/cnf_motion/                          共享运动代码（逐字迁入，随根包安装）
+```
+
+该迁移只把硬编码绝对路径收敛到 `learned_basis_hybrid_cnf.config`（`CNF_V2_*` 环境变量 /
+JSON 配置），数值代码未改，以保证与原运行口径一致。它**不是**本模块 `src/gcnf_video_generation/`
+的通用 adapter（该通用接口仍为 scaffold，待 VID-001/002 按 core 契约拆分），而是可独立安装复现的
+实验包。安装、配置、命令、缺失资源与验证范围见
+[experiments/learned_basis_hybrid_cnf/README.md](../../experiments/learned_basis_hybrid_cnf/README.md)
+与 [reproduction.md](../../experiments/learned_basis_hybrid_cnf/docs/reproduction.md)。
+
 ## 开始认领
 
 阅读 [TASKS.md](TASKS.md)、[共享契约](../../docs/contracts.md)、[协作规则](../../CONTRIBUTING.md)。配置 `configs/full.example.json` 是未执行的通用模板，尚未编码本次 input-level protocol，其中 seed/样本数不表示已有结果。后续任务负责人应先完成可行性与信息匹配协议，再登记数据、模型及锁定环境，并补真实 setup/train/sample/evaluate 命令。

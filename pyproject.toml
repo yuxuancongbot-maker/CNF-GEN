@@ -12,6 +12,23 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["ruff>=0.14,<1", "jsonschema>=4.23,<5", "build>=1.2,<2"]
+motion = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "torch>=2.1",
+    "pybullet>=3.2",
+    "opencv-python>=4.8",
+    "imageio>=2.31",
+    "imageio-ffmpeg>=0.4",
+]
+wan = [
+    "diffusers>=0.30",
+    "omegaconf>=2.3",
+    "transformers>=4.40",
+    "accelerate>=0.30",
+    "safetensors>=0.4",
+    "Pillow>=10.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -19,6 +36,14 @@ where = ["src"]
 [tool.ruff]
 target-version = "py310"
 line-length = 100
+# ``src/cnf_motion`` and ``experiments/`` are a faithful migration of the
+# pre-existing Wan 1.3B input-level research code (see docs/migration.md). They
+# are excluded from the scaffold's lint/format rules to preserve numerical
+# parity with the original runs; the scaffold's own code remains fully checked.
+extend-exclude = [
+    "src/cnf_motion",
+    "experiments",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

@@ -1,31 +1,49 @@
 {
   "status": "template-not-executed",
   "task": "shape_completion",
-  "pipeline": "full",
-  "training_seeds": [
-    0,
-    1,
-    2
-  ],
-  "samples_per_condition": 16,
-  "data_root_env": "GCNF_DATA_ROOT",
-  "checkpoint_root_env": "GCNF_CHECKPOINT_ROOT",
-  "run_root_env": "GCNF_RUN_ROOT",
-  "dataset": {
-    "id": null,
-    "revision": null,
-    "split": null
+  "pipeline": "preflight-train-evaluate",
+  "note": "Protocol reference only. The CLI takes these as flags; this file is not executed. Results from the executed run are in results/heldout-64.json and docs/hp-handoff.md.",
+  "external": {
+    "sdfusion_root_env": "GCNF_SDFUSION_ROOT",
+    "weights_dir_env": "GCNF_SDFUSION_WEIGHTS",
+    "pinned_commit": "09801f6d04c04816e5827af981e2ae77be77ce5b",
+    "verify_checksums": true
   },
-  "prior": {
-    "id": null,
-    "revision": null
+  "data": {
+    "manifest_format": "[{object_id, path}] with 64^3 xyz NPZ records",
+    "frozen_id_list": "configs/onet_chair_split.json",
+    "resolution": 64,
+    "anchors": 32
   },
-  "constraint_layout": null,
-  "methods": [
-    "unconstrained",
-    "soft_guidance",
-    "posthoc",
-    "stepwise"
-  ],
-  "note": "Template only. Task owner must implement the pipeline and select a full protocol."
+  "training": {
+    "arms": ["plain", "soft", "cnf"],
+    "steps": 1000,
+    "lr": 1e-5,
+    "batch_size": 1,
+    "seed": 111,
+    "mask_reduce": "half",
+    "mask_erode": 0,
+    "t_weight_mode": "alphas_cumprod",
+    "sigma_scale": 2.0,
+    "n_query_grid": 224,
+    "vqvae_frozen": true,
+    "no_update_preflight": true
+  },
+  "evaluation": {
+    "methods": ["original", "plain", "soft", "post", "cnf", "plain_post"],
+    "count": 64,
+    "ddim_steps": 50,
+    "ddim_eta": 0.0,
+    "seed": 111,
+    "surface_samples": 10000,
+    "surface_rng": "explicit per-method seed; cnf and plain_post share the corrected-sampling offset",
+    "matched_ddim": "one seed per object, shared across generated arms",
+    "output_correction": ["post", "cnf", "plain_post"]
+  },
+  "metrics": {
+    "constraints": "anchor value/gradient abs residual, solve rank/condition/residual",
+    "geometry": "full and hidden Chamfer (squared normalized length units)",
+    "reporting": "per-shape, aggregate, paired bootstrap, failures"
+  },
+  "guarantee_boundary": "128 equalities hold for the continuous corrected field at 32 points; no global SDF/topology/mesh-vertex guarantee"
 }

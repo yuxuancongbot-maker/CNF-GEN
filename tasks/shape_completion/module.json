@@ -2,7 +2,7 @@
   "id": "shape_completion",
   "title": "3D 形状补全",
   "priority": "P0",
-  "state": "scaffold",
+  "state": "validated",
   "owner": null,
   "package": "gcnf_shape_completion",
   "package_dir": "src/gcnf_shape_completion",

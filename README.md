@@ -2,7 +2,7 @@
 
 为生成神经场提供测试时点值与微分硬约束；在满足要求的同时，评估生成质量和可行多样性。
 
-**当前状态：共享 core/任务通用接口仍为协作骨架；Wan 1.3B input-level v2 实验已作为独立实验模块迁入（见下文「已迁入的 faithful 实验代码」）。** 迁移后已验证训练、动作采样和单条视频链路，尚未重新运行完整 256 视频实验。各任务的状态与待办以其 `module.json`、`TASKS.md` 为准。
+**当前状态：共享 core 仍为协作骨架；Wan 1.3B input-level v2 实验与 SDFusion+CNF 形状补全应用已迁入（见下文「已迁入的 faithful 实验代码」）。** 形状补全已通过离线 CPU 回归与 no-update preflight；Wan 链路已验证训练、动作采样和单条视频，尚未重新运行完整 256 视频实验。其余任务状态与待办以其 `module.json`、`TASKS.md` 为准。
 
 ## 仓库分工
 
@@ -60,7 +60,7 @@ source .venv-action/bin/activate
 python -m pip install -e '.[dev]' -e tasks/action_generation
 ```
 
-任务包当前只含包骨架，模型依赖由对应迁移 Issue 添加；上面的安装不会下载 PyTorch、数据或权重。训练/评测入口尚未实现，不能将任务配置模板当成已经可运行的 pipeline。
+多数任务包仍只含骨架；`tasks/shape_completion/` 已实现训练/评测入口并通过离线测试与 preflight，其外部 SDFusion 与权重须显式配置，安装本身不会下载 PyTorch、数据或权重。其他任务的配置模板仍未执行，不能当成可运行 pipeline。
 
 ## 已迁入的 faithful 实验代码
 
@@ -72,11 +72,18 @@ src/cnf_motion/                          共享运动代码（随根包 pip inst
 experiments/learned_basis_hybrid_cnf/    v2 实验包 + 入口 + 数据准备/评测器/PSNR 脚本
 ```
 
-这不是六个任务通用 `gcnf_*` adapter 的实现（那些仍为 scaffold），而是可独立安装、按
+这不是六个任务通用 `gcnf_*` adapter 的实现，而是可独立安装、按
 `CNF_V2_*` 环境变量/JSON 配置复现的实验包。安装、配置、命令、缺失资源与验证范围见
 [experiments/learned_basis_hybrid_cnf/README.md](experiments/learned_basis_hybrid_cnf/README.md)、
 [reproduction.md](experiments/learned_basis_hybrid_cnf/docs/reproduction.md) 与
 [迁移清单](docs/migration.md)。
+
+**SDFusion + 硬约束 CNF 形状补全**已迁入通用任务模块
+[tasks/shape_completion/](tasks/shape_completion/)：`src/gcnf_shape_completion/` 提供连续场、
+Hermite-Gaussian CNF、数据/掩码条件、三训练分支与六方法评测；`scripts/train.py` 与
+`scripts/evaluate.py` 为薄入口，外部官方 SDFusion 与权重通过
+`GCNF_SDFUSION_ROOT` / `GCNF_SDFUSION_WEIGHTS` 配置并校验固定 revision。已通过离线 CPU
+回归和 A100 预检。 [运行说明](tasks/shape_completion/README.md)
 
 ## 开发规则
 

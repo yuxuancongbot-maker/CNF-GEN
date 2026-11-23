@@ -2,7 +2,7 @@
   "id": "deformation",
   "title": "形变场生成",
   "priority": "P2",
-  "state": "scaffold",
+  "state": "experimental",
   "owner": null,
   "package": "gcnf_deformation",
   "package_dir": "src/gcnf_deformation",

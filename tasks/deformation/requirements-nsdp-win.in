@@ -1,0 +1,13 @@
+# Windows user-handle demo runtime, aligned with the approved CUDA Torch.
+--index-url https://pypi.org/simple
+
+torch==2.9.1+cu128
+numpy==1.26.4
+scikit-image==0.24.0
+open3d==0.18.0
+trimesh==5.2.1
+scipy==1.15.3
+tqdm==4.67.1
+PyYAML==6.0.2
+setuptools==80.9.0
+ninja==1.13.0

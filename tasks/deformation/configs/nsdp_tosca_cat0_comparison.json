@@ -1,0 +1,31 @@
+{
+  "application_id": "nsdp_tosca_cat0_hard_vs_soft_v1",
+  "normalization": "NSDP GAPS area-weighted PCA scale 0.35 with centroid translation",
+  "device": "cuda:0",
+  "num_threads": 4,
+  "cnf_handle_count": 12,
+  "handle_layouts": {
+    "spread_fps": {
+      "candidate_pool": "all_moved_vertices"
+    },
+    "inner50_fps": {
+      "candidate_pool": "nearest_radius_quantile",
+      "radius_quantile": 0.5
+    }
+  },
+  "rbf": {
+    "kernel": "gaussian",
+    "length_scale_normalized": 0.1,
+    "max_handle_error": 1e-5
+  },
+  "soft_baseline": {
+    "objective": "squared_handle_residual_plus_ridge_coefficients",
+    "ridge_lambdas": [0.0001, 0.01, 1.0]
+  },
+  "query": {
+    "surface_normal_offset_probe_count": 16,
+    "seed": 20261117,
+    "offset_fraction_of_bbox_diagonal": 0.01
+  },
+  "mesh_format": "obj"
+}

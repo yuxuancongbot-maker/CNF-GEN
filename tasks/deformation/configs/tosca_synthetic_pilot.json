@@ -1,0 +1,42 @@
+{
+  "schema_version": "deformation-tosca-synthetic-pilot-v1",
+  "evidence_level": "synthetic_target_on_real_mesh_interface_engineering",
+  "source": {
+    "path": "../_external/nsdp_assets/tosca_sample/dataset/cat/0000/model_normalized.obj",
+    "expected_vertex_count": 10000,
+    "expected_face_count": 19940,
+    "coordinate_frame": "NSDP normalized cat0 frame"
+  },
+  "sampling": {
+    "seed": 20261122,
+    "fps_start_index": 0,
+    "handle_counts": [6, 12]
+  },
+  "rbf": {
+    "kernel": "gaussian",
+    "length_scale": 0.1,
+    "max_handle_error": 1e-5,
+    "soft_ridge_lambdas": [0.0001, 0.01, 1.0]
+  },
+  "fields": {
+    "affine_truth_v1": {
+      "type": "affine",
+      "linear": [[0.035, 0.008, 0.0], [0.0, -0.025, 0.012], [0.006, 0.0, 0.028]],
+      "offset": [0.008, -0.012, 0.004],
+      "prior_scale": 0.75,
+      "region_center": [0.0, 0.3, 0.0],
+      "region_radius": 0.34
+    },
+    "local_smooth_truth_v1": {
+      "type": "affine_plus_gaussian",
+      "linear": [[0.035, 0.008, 0.0], [0.0, -0.025, 0.012], [0.006, 0.0, 0.028]],
+      "offset": [0.008, -0.012, 0.004],
+      "prior_scale": 0.75,
+      "bump_center": [0.0, 0.3, 0.0],
+      "bump_sigma": 0.22,
+      "bump_amplitude": 0.045,
+      "bump_direction": [0.0, 1.0, 0.0],
+      "region_radius": 0.36
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "scope": "CPU-only offline summary of two saved TOSCA cat0 NSDP runs",
+  "dataset": "TOSCA/cat0",
+  "mesh": {
+    "vertices": 10000,
+    "faces": 19940,
+    "unique_edges": 29928
+  },
+  "acceptance": {
+    "max_handle_error_normalized": 1e-5,
+    "geometric_quality_threshold": null
+  },
+  "metric_definitions": {
+    "max_handle_error": "Maximum Euclidean target-position error across 12 selected handles, in normalized coordinates.",
+    "tangential_strain_p95": "Source-face-area-weighted p95 of max(abs(log(sigma))) for the piecewise-linear triangle tangent map.",
+    "edge_p95_factor": "exp(p95(abs(log(deformed_to_source_edge_length_ratio)))); 1 means unchanged.",
+    "face_area_p95_factor": "exp(p95(abs(log(deformed_to_source_face_area_ratio)))); 1 means unchanged.",
+    "normal_nonpositive_count": "Count of source/output triangle-normal dot products <= 0.",
+    "degenerate_face_count": "Count of output triangle areas <= 1e-12."
+  },
+  "conditions": [
+    {
+      "layout": "spread",
+      "run_id": "20261117T093749740483Z-26694d72-nsdp-tosca-cat0-head-rbf-spread_fps",
+      "field_queries_sha256": "c71ec7aa930482de046a0adacae3699d394173efe8b8158929a1557ad7692fcb",
+      "status": "succeeded",
+      "handle_count": 12,
+      "methods": [
+        {"name": "raw_prior", "max_handle_error": 0.05960972713705752, "tangential_strain_p95": 0.6705128539716673, "edge_p95_factor": 1.5862290990064634, "face_area_p95_factor": 1.978297262683983, "normal_nonpositive_count": 37, "degenerate_face_count": 0},
+        {"name": "hard_cnf", "max_handle_error": 1.7772239894833365e-16, "tangential_strain_p95": 0.7020677077463424, "edge_p95_factor": 1.6309022316645376, "face_area_p95_factor": 2.038954965323321, "normal_nonpositive_count": 37, "degenerate_face_count": 0},
+        {"name": "soft_lambda_1e-04", "max_handle_error": 0.0014785978705489388, "tangential_strain_p95": 0.7003658880080108, "edge_p95_factor": 1.6316345235246357, "face_area_p95_factor": 2.0401680073343686, "normal_nonpositive_count": 37, "degenerate_face_count": 0},
+        {"name": "soft_lambda_1e-02", "max_handle_error": 0.011100067746250327, "tangential_strain_p95": 0.7013704367343981, "edge_p95_factor": 1.6312812663069278, "face_area_p95_factor": 2.055656192346619, "normal_nonpositive_count": 36, "degenerate_face_count": 0},
+        {"name": "soft_lambda_1e+00", "max_handle_error": 0.014865333403007648, "tangential_strain_p95": 0.6976067285744896, "edge_p95_factor": 1.6246904327071507, "face_area_p95_factor": 2.0419679785571265, "normal_nonpositive_count": 38, "degenerate_face_count": 0}
+      ]
+    },
+    {
+      "layout": "inner50",
+      "run_id": "20261117T093835380245Z-d463b24e-nsdp-tosca-cat0-head-rbf-inner50_fps",
+      "field_queries_sha256": "858a5fb46274d1e039980826a6a44c71b3efb64cb93b37edb4d5baa0dea40811",
+      "status": "succeeded",
+      "handle_count": 12,
+      "methods": [
+        {"name": "raw_prior", "max_handle_error": 0.038092234689242485, "tangential_strain_p95": 0.6705128539716673, "edge_p95_factor": 1.5862290990064634, "face_area_p95_factor": 1.978297262683983, "normal_nonpositive_count": 37, "degenerate_face_count": 0},
+        {"name": "hard_cnf", "max_handle_error": 3.3537189618722464e-16, "tangential_strain_p95": 0.6951667559819925, "edge_p95_factor": 1.628341274956001, "face_area_p95_factor": 2.059889261222196, "normal_nonpositive_count": 38, "degenerate_face_count": 0},
+        {"name": "soft_lambda_1e-04", "max_handle_error": 0.002854496981591731, "tangential_strain_p95": 0.6882625703085454, "edge_p95_factor": 1.6157709504408313, "face_area_p95_factor": 2.044807032809274, "normal_nonpositive_count": 38, "degenerate_face_count": 0},
+        {"name": "soft_lambda_1e-02", "max_handle_error": 0.004059426492506651, "tangential_strain_p95": 0.6871764489894702, "edge_p95_factor": 1.6138759781787326, "face_area_p95_factor": 2.0328057839159968, "normal_nonpositive_count": 38, "degenerate_face_count": 0},
+        {"name": "soft_lambda_1e+00", "max_handle_error": 0.008748309514644894, "tangential_strain_p95": 0.6822182224108876, "edge_p95_factor": 1.6098262685770772, "face_area_p95_factor": 2.0240789122148883, "normal_nonpositive_count": 37, "degenerate_face_count": 0}
+      ]
+    }
+  ],
+  "interpretation": [
+    "Hard meets the finite-handle tolerance in both saved cat0 layouts. Soft reduces raw handle error but does not meet the 1e-5 tolerance.",
+    "Full-mesh p95 geometry descriptors are slightly higher for Hard than raw in both layouts. These descriptive measures do not define an overall quality pass/fail threshold.",
+    "Normal sign counts and sampled edge/area or tangent-strain descriptors do not by themselves establish folds, self-intersections, physical validity, or perceptual quality."
+  ],
+  "provenance": "Values are copied from the saved paired_region_metrics.json and cross-checked against each run.json. Source field query artifact hashes are recorded above. No mesh, checkpoint, or field artifact is included in this summary."
+}

@@ -121,5 +121,6 @@ CNF 硬投影适用于观测点能分辨的平滑场；对含高频的场加稀�
 | 文件 | 说明 |
 |---|---|
 | train_burgers.py | Burgers 动态任务：训练 + 评估一体 |
-| train_darcy_fm.py | Darcy 任务：训练 |
-| eval_darcy_fm.py | Darcy 任务：评估 |
+| train_darcy_fm.py | Darcy 固定 Fourier 基：训练 |
+| eval_darcy_fm.py | Darcy 固定 Fourier 基：评估 |
+| [neural_basis_darcy/](neural_basis_darcy/README.md) | **新方法**：Darcy 约束感知 MLP-289 神经基 + PCA 对齐 + `std_proj` CNF 生成（1,000 留出场 rel MSE `5.34e-3 → 5.25e-4`，降 10.2×） |

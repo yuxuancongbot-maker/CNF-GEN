@@ -101,3 +101,7 @@ python -m unittest discover -s tasks/shape_completion/tests -v
 覆盖 xyz↔zyx 各向异性轴约定、样条解析导数与 autograd、掩码与噪声、严格数据契约、FP64 CNF 精确值/梯度求解与梯度路径、以及固定表面采样 RNG 的可复现性。
 
 提交前检查：`python scripts/check_repository.py`、`ruff check .`、`ruff format --check .`、`python -m build`。
+
+## 扩展：预训练 Hunyuan3D-2mini + Matérn-5/2 法向坐标变换 CNF
+
+除上述 64³ SDFusion 底座外，[hunyuan3d_cnf_warp/README.md](hunyuan3d_cnf_warp/README.md) 提供了在冻结预训练 **Hunyuan3D-2mini**（128³）上通过 32 方程切向自由 Matérn-5/2 RKHS 坐标变换 $f_{\mathrm{CNF}}(x)=f_0(x+u(x))$ 施加连续硬表面约束的独立实现（64 把留出椅子上 Full Chamfer `0.00425 → 0.00186`、Hidden Chamfer `0.02540 → 0.01348`、FP64 连续残差 $\le 1.53\times 10^{-13}$、64/64 零折叠）。

@@ -104,4 +104,7 @@ python -m unittest discover -s tasks/shape_completion/tests -v
 
 ## 扩展：预训练 Hunyuan3D-2mini + Matérn-5/2 法向坐标变换 CNF
 
-除上述 64³ SDFusion 底座外，[hunyuan3d_cnf_warp/README.md](hunyuan3d_cnf_warp/README.md) 提供了在冻结预训练 **Hunyuan3D-2mini**（128³）上通过 32 方程切向自由 Matérn-5/2 RKHS 坐标变换 $f_{\mathrm{CNF}}(x)=f_0(x+u(x))$ 施加连续硬表面约束的独立实现（64 把留出椅子上 Full Chamfer `0.00425 → 0.00186`、Hidden Chamfer `0.02540 → 0.01348`、FP64 连续残差 $\le 1.53\times 10^{-13}$、64/64 零折叠）。
+除上述 64³ SDFusion 底座外，本目录还包含两套基于冻结 `ShapeVAE` + **Hunyuan3D-2mini**（128³）的独立实现：
+
+- [hunyuan3d_cnf_warp/README.md](hunyuan3d_cnf_warp/README.md)：测试时 32 方程切向无关 Matérn-5/2 RKHS 坐标变换 $f_{\mathrm{CNF}}(x)=f_0(x+u(x))$（64 把留出椅子上 Full Chamfer `0.00425 → 0.00186`、Hidden Chamfer `0.02540 → 0.01348`、FP64 连续残差 $\le 1.53\times 10^{-13}$、64/64 零折叠）。
+- [hunyuan3d_dit_lora_cnf/README.md](hunyuan3d_dit_lora_cnf/README.md)：保先验 DiT LoRA + 1 步隐函数定理（IFT）可微 Matérn-5/2 CNF 双臂严格对照实验（`plain_lora_v2` vs `cnf_lora_v2` + 同一测试时 CNF；Full Chamfer 进一步降至 `0.00167 / 0.00165`，最差雅可比 `min det(J)` 从 `0.080` 提升至 `0.155`，平均遮挡区 Chamfer 两臂统计打平 `0.01311 / 0.01338`）。
